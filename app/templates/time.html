@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+  
+    <title>Document</title>
+</head>
+<script>
+        var intervalData = 1000 * 60;  
+        var intervalSS = intervalData / 1000;  
+        var contInterval;  
+        $(function(){  
+              
+            //此处是初始第一次加载数据  
+            ajaxRequest();  
+            countdownRun();  
+      
+              
+            setInterval(function(){  
+                //此处过了定时时间后执行一次  
+                ajaxRequest();  
+                countdownRun();  
+            },intervalData);  
+        });  
+        function countdownRun(){  
+            if(contInterval){  
+                clearInterval(contInterval);  
+            }  
+            $("#timeShow").text(intervalSS);  
+            var divTimeval = intervalSS;  
+            contInterval = setInterval(function(){  
+                divTimeval--;  
+                if(divTimeval < 0){  
+                    clearInterval(contInterval);  
+                    return;  
+                }  
+                //将秒数设置到显示区  
+                $("#timeShow").html(divTimeval);  
+            },1000);  
+        }  
+      
+          
+        function ajaxRequest(){  
+            alert("我被执行力 。哈哈哈哈...........");  
+        }  
+          
+</script>
+<body>
+        <div style="padding-top: 50;">  
+                <span id="timeShow"></span>   
+        </div>  
+</body>
+</html>

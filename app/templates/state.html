@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<link type="text/css" href="../static/css/jquery-ui.min.css" rel="stylesheet">
+<style type="text/css">
+    #right {
+        float :right;
+        width: 48%;
+    }
+    #left {
+        float :left;
+        width: 48%;
+    }
+</style>
+<script src="https://gw.alipayobjects.com/os/lib/antv/g2/3.4.10/dist/g2.min.js"></script>
+<script src="../static/js/jquery-ui.min.js"></script>
+<script>
+    setInterval(function(){ fresh() }, 5000);
+    function fresh(){
+        if(document.getElementById('state'))
+            window.location.reload()
+    }
+    function get_first_element(){
+        var first=document.getElementById('first').innerText
+        document.getElementById('real_first').innerText=first
+    }
+</script>     
+<script>
+    const data = [
+  { genre: 'Sports', sold: 275 },
+  { genre: 'Strategy', sold: 115 },
+  { genre: 'Action', sold: 120 },
+  { genre: 'Shooter', sold: 350 },
+  { genre: 'Other', sold: 150 }
+]; // G2 对数据源格式的要求，仅仅是 JSON 数组，数组的每个元素是一个标准 JSON 对象。
+// Step 1: 创建 Chart 对象
+const chart = new G2.Chart({
+  container: 'c1', // 指定图表容器 ID
+  width : 600, // 指定图表宽度
+  height : 300 // 指定图表高度
+});
+// Step 2: 载入数据源
+chart.source(data);
+// Step 3：创建图形语法，绘制柱状图，由 genre 和 sold 两个属性决定图形位置，genre 映射至 x 轴，sold 映射至 y 轴
+chart.interval().position('genre*sold').color('genre')
+// Step 4: 渲染图表
+chart.render();
+</script>
+<body>
+    
+    <div id="right">
+
+   
+            <h4>各类型洗车次数统计</h4>
+        <table id="p">
+            <th>洗车总次数:</th>
+            <th>普通水洗:</th>
+            <th>泡沫洗:</th>
+            <th>泡沫蜡洗:</th>
+            <th>蜡洗:</th>
+            <tr>
+                <td>{{count}}</td>
+                <td>{{normal}}</td>
+                <td>{{bubble}}</td>
+                <td>{{wax_bubble}}</td>
+                <td>{{wax}}</td> 
+            </tr>
+        </table>   
+    </div>
+    <div id="left">
+            <div id="state" style="display:none">{{state}}</div>
+    <h3>实时数据:</h3>
+<table>  
+    <th>状态:</th>
+    <th>时间:</th>
+    
+  
+    <tr> 
+               
+                  
+                
+                {%if state=='start'%}
+                <td>准备新一轮洗车流程</td>
+                {%elif state=='complete'%}
+                <td>洗车完成</td>
+                {%elif state=='failure'%}
+                <td>洗车故障</td>
+                {%elif state=='get_in_position'%}
+                <td>正在进入清洗区</td>
+                {%elif state=='position_ok'%}
+                <td>停车到位</td>             
+                {%elif state=='start_wash'%}
+                <td>开始洗车</td>
+                {%elif state=='finish_wash'%}
+                <td>洗车结束</td>
+                {%elif state=='start_bubble'%}
+                <td>正在喷泡沫</td>
+                {%elif state=='finish_bubble'%}
+                <td>喷泡沫结束</td>
+                {%elif state=='start_blow'%}
+                <td>正在吹干</td>
+                {%elif state=='finish_blow'%}
+                <td>吹干结束</td>
+                {%elif state=='start_wax'%}
+                <td>正在打蜡</td>
+                {%elif state=='finish_wax'%}
+                <td>打蜡结束</td>
+                {%elif state=='push_water'%}
+                <td>正在清洗</td>
+                {%elif state=='end_push'%}
+                <td>清洗结束</td>
+               
+            {%endif%}
+            
+            <td id="t">{{time}}</td>
+            </tr>
+              
+        </div>          
+</table>
+<h4>最新的50条历史数据</h4>
+<p>显示数据数：（{{ items|length }}）</p>
+<hr />
+    <table>
+        <th>
+            状态
+        </th>
+        <th>
+            时间
+        </th>
+        {%for item in items%}
+        <tr>
+            {%if item['single_state']=='start'%}
+            <td id ='first'>准备新一轮洗车流程</td>
+            {%elif item['single_state']=='complete'%}
+            <td>洗车完成</td>
+            {%elif item['single_state']=='failure'%}
+            <td>洗车失败</td>
+            {%elif item['single_state']=='get_in_position'%}
+            <td>正在进入清洗区</td>
+            {%elif item['single_state']=='position_ok'%}
+            <td>已进入清洗区</td>       
+            {%elif item['single_state']=='start_wash'%}
+            <td>开始洗车</td>
+            {%elif item['single_state']=='finish_wash'%}
+            <td>洗车结束</td>
+            {%elif item['single_state']=='start_bubble'%}
+            <td>正在喷泡沫</td>
+            {%elif item['single_state']=='finish_bubble'%}
+            <td>喷泡沫结束</td>
+            {%elif item['single_state']=='start_blow'%}
+            <td>正在吹干</td>
+            {%elif item['single_state']=='finish_blow'%}
+            <td>吹干结束</td>
+            {%elif item['single_state']=='start_wax'%}
+            <td>正在打蜡</td>
+            {%elif item['single_state']=='finish_wax'%}
+            <td>打蜡结束</td>
+            {%elif item['single_state']=='push_water'%}
+            <td>正在清洗</td>
+            {%elif item['single_state']=='end_push'%}
+            <td>清洗结束</td>
+           
+        {%endif%}
+
+                <td> {{item['time']}} </td>
+        </tr>
+        {%endfor%}  
+    </table>
+<input type="button" onclick="clearInterval(fresh)" value="stop">
+<div id="c1"></div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   {#%
+    
+    %#}
